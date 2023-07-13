@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+<style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{
+        display:flex;flex-flow:column nowrap;
+        justify-content:center;align-items:center;
+        gap:30px;
+        width:100%;height:100vh;
+        background:#ccc;
+    }
+    li{list-style-type:none;}
+
+    #wrap{
+        position:relative;
+        overflow:hidden;
+        background:#bbb;
+        padding:20px;
+    }
+
+    #marquee{
+        display:flex;flex-flow:row nowrap;
+        justify-content:flex-start; align-items:center;
+        gap:20px;
+        position:relative;
+        font-size:3rem;
+    }
+    #marquee li{
+        position:relative;
+        padding:0.5rem 3rem 0.8rem;
+        background:#fff;
+        border:1px solid #aaa; border-radius:4px;
+    }
+
+    #marquee li.cloned{color:#ccc;}
+</style>
+</head>
+<body>
+    <h1>marquee test</h1>
+    <div id="wrap">
+        <ul id="marquee">
+            <li>lorem</li>
+            <li>ipsum</li>
+            <li>dolo</li>
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+        </ul>
+    </div>
+
+<script>
+    const $mq = document.getElementById('marquee');
+
+    function marquee_elem($elem){
+        const $wrap = $elem.parentElement
+        const widWrap = $wrap.getBoundingClientRect().width;
+        $wrap.style.width = `${widWrap}px`;
+        
+        const $$li = $elem.querySelectorAll('LI');
+        const $frag = document.createDocumentFragment();
+        $$li.forEach($li =>{
+            const $newLi = $li.cloneNode(true);
+            $newLi.classList.add('cloned'); //복제품 비교용
+            $frag.appendChild($newLi);
+        });
+        $elem.appendChild($frag);
+
+        move_elem($elem);
+    }//marquee_elem
+
+    function move_elem($elem){
+        const ani = $elem.animate([{
+            transform : 'translateX(calc(-100% - 20px))'
+        }],{
+            duration : 5000,
+            easing : "linear"
+        });
+
+        ani.addEventListener('finish',()=>{
+            move_elem($elem);
+        },{once:true});
+    }//move_elem
+
+    marquee_elem($mq);
+</script>
+</body>
+</html>
